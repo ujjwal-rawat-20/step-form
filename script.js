@@ -1,9 +1,18 @@
 let stepCount = 0;
+const formOneDataObj = {};
+const formTwoDataObj = {};
+const formThreeDataObj = {};
 
-const formMapToSteps = {
+const formMapToSteps = {  // to identify we are on which form based on the steps:
     0: "formOne",
     1: "formTwo",
     2: "formThree"
+}
+
+const formMapToData = {     // which form represents which form data object:
+    0: formOneDataObj,
+    1: formTwoDataObj,
+    2: formThreeDataObj
 }
 
 const formOne = [true, true, true, true, true];
@@ -11,7 +20,7 @@ const formTwo = [true, true, true, true, true];
 const formThree = [true, true, true, true];
 
 
-const formMap = {
+const formMap = {       // map to maintain or capture the error on each form
     "formOne": formOne,
     "formTwo": formTwo,
     "formThree": formThree
@@ -19,6 +28,8 @@ const formMap = {
 
 //Regex functions:
 function checkEmail(inputValue) {
+    if(inputValue === "") return true;
+
     let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if(!emailRegex.test(inputValue)) return false;
     return true;
@@ -26,6 +37,7 @@ function checkEmail(inputValue) {
 
 
 function customPasswordCheck(inputValue) {
+    if(inputValue.length === 0) return true;
     if( !((inputValue.length >= 8) && (inputValue.length <= 16))) 
         return false;
 
@@ -57,21 +69,88 @@ function allowOnlyNumbers(event) {
 }
 
 
-function checkAllInputFields(form) {
+function checkAllInputFields(formData, form) {
     let foundError = false;
-    console.log(form);
-
-    const allInputs = document.querySelector(`.${form}`).querySelectorAll(".inputBlocks");
-    allInputs.forEach((inputElement, index) => {
-        const inputBox = inputElement.querySelector(".inputbox");
-        // console.log(inputBox.value);
-
-        if(!inputBox.value) {
-            showError(form, inputBox.name, index+1, "field cannot be empty..!");
-            foundError = true;
+    
+    Object.keys(formData).forEach((item, index) => {
+        const key = item;
+        if(key === "email") {
+            const inputBlock = document.querySelector(`.${form}`).querySelector(`#${key}`);
+            const errorElement = inputBlock.nextSibling.nextSibling;
+            const inputEamil = formData[key];
+            if(!checkEmail(inputEamil)) {
+                foundError = true;
+                errorElement.classList.add("error");
+                errorElement.innerText = "not a valid email";
+            } else {
+                errorElement.classList.remove("error");
+                errorElement.innerText = "";
+            }
+        } else if(key === "password") {
+            const inputBlock = document.querySelector(`.${form}`).querySelector(`#${key}`);
+            const errorElement = inputBlock.nextSibling.nextSibling;
+            const inputPassword = formData[key];
+            if(!customPasswordCheck(inputPassword)) {
+                foundError = true;
+                errorElement.classList.add("error");
+                errorElement.innerText = "min 8, max 16, one uppercase, one special character";
+            } else {
+                errorElement.classList.remove("error");
+                errorElement.innerText = "";
+            }
+        } else if(key === "phonenumber") {
+            const inputBlock = document.querySelector(`.${form}`).querySelector(`#${key}`);
+            const errorElement = inputBlock.nextSibling.nextSibling;
+            const inputPhoneNumber = formData[key];
+            if(inputPhoneNumber.length !== 10) {
+                foundError = true;
+                errorElement.classList.add("error");
+                errorElement.innerText = "10 digits needed..!";
+            } else {
+                errorElement.classList.remove("error");
+                errorElement.innerText = "";
+            }
+        } else if(key === "address") {
+            const inputBlock = document.querySelector(`.${form}`).querySelector(`#${key}`);
+            const errorElement = inputBlock.nextSibling.nextSibling;
+            const inputAddress = formData[key];
+            if(!inputAddress) {
+                foundError = true;
+                errorElement.classList.add("error");
+                errorElement.innerText = "Field cannot be empty..!";
+            } else {
+                errorElement.classList.remove("error");
+                errorElement.innerText = "";
+            }
+        } else if(key === "workexperience") {
+            const inputBlock = document.querySelector(`.${form}`).querySelector(`#${key}`);
+            const errorElement = inputBlock.nextSibling.nextSibling;
+            const inputAddress = formData[key];
+            if( !((Number(inputAddress) >= 1) && (Number(inputAddress) <= 50)) ) {
+                foundError = true;
+                errorElement.classList.add("error");
+                errorElement.innerText = "field cannot be empty, only numbers allowed, number less then 50";
+            } else {
+                foundError = false;
+                errorElement.classList.remove("error");
+                errorElement.innerText = "";
+            }
+        } else if(key === "yearsworked") {
+            const inputBlock = document.querySelector(`.${form}`).querySelector(`#${key}`);
+            const errorElement = inputBlock.nextSibling.nextSibling;
+            const inputAddress = formData[key];
+            if( !((Number(inputAddress) >= 1) && (Number(inputAddress) <= 50)) ) {
+                foundError = true;
+                errorElement.classList.add("error");
+                errorElement.innerText = "field cannot be empty, only numbers allowed, number less then 50";
+            } else {
+                foundError = false;
+                errorElement.classList.remove("error");
+                errorElement.innerText = "";
+            }
         }
     });
-    console.log(foundError);
+
     return foundError;
 }
 
@@ -87,36 +166,71 @@ function saveData() {
     const stringData = JSON.stringify(dataObject);
     localStorage.setItem("formData", stringData);
 
+
     setTimeout(() => {
+        const fOne = document.querySelector("#formOne");
+        const fTwo = document.querySelector("#formTwo");
+        const fThree = document.querySelector("#formThree");
+        fOne.reset(); fTwo.reset(); fThree.reset();
+
         location.href = "display.html";
     }, 2000);
 }
 
 function changeStep(buttonClicked) {
     const btn = document.querySelector(".buttonTwo");
-    if(btn.innerText === "Save") {
-       return saveData();
-    }
+    if(btn.innerText === "Save")
+        return saveData();
 
-    if(stepCount === 0 && buttonClicked === "prev") return;
+    if(stepCount === 0 && buttonClicked === "prev") {
+        return;
+    }
     let formToHide = -1;
 
     if(buttonClicked === "prev") {
-        checkAllInputFields(formMapToSteps[stepCount]);
         formToHide = stepCount;
         stepCount--;
+        if(stepCount === 2) 
+            btn.innerText = "Save";
+        else
+         btn.innerHTML = "Next";
     } else {
-        if(checkAllInputFields(formMapToSteps[stepCount])) return;
+        if(checkAllInputFields(formMapToData[stepCount], formMapToSteps[stepCount])) return;
         formToHide = stepCount;
         stepCount++;
+        if(stepCount === 2) 
+            btn.innerText = "Save";
+        else
+            btn.innerHTML = "Next";
     }
-
     let selectedForm = formMapToSteps[stepCount];
     const selectedFormElement = document.querySelector(`.${selectedForm}`);
     const formToRemoveElement = document.querySelector(`.${formMapToSteps[formToHide]}`);
 
     formToRemoveElement.classList.add("hideElement");
     selectedFormElement.classList.remove("hideElement");
+
+
+    // to disable the next button if all the values of the current form are empty:
+    const currentForm = formMapToSteps[stepCount];
+    let errorFound = false;
+
+    const allInputs = document.querySelector(`.${currentForm}`).querySelectorAll(".inputBlocks");
+    allInputs.forEach((inputElement, index) => {
+        const inputBox = inputElement.querySelector(".inputbox");
+        if(inputBox.value === "" || inputBox.value === undefined || inputBox.value === null)
+            errorFound = true;
+    });
+
+    if(errorFound) {
+        btn.disabled = true;
+        btn.style.backgroundColor = "grey";
+        btn.style.cursor = "not-allowed";
+    }else {
+        btn.disabled = false;
+        btn.style.backgroundColor = "blue";
+        btn.style.cursor = "pointer";
+    }
 }
 
 function disableNextButton() {
@@ -134,7 +248,6 @@ function enableNextButton() {
 }
 
 function showError(form, name, index, message) {
-    console.log(message);
     const inputBlocks = document.querySelector(`.${form}`).querySelectorAll(".inputBlocks");
     const errorElement = inputBlocks[index-1].querySelector("p");
     errorElement.classList.add("error");
@@ -150,7 +263,6 @@ function removeError(form, name, index) {
 
 function onlyLettersAllowed(keyCode) {
     let allowedKeys = [8, 9, 13, 16, 17, 18, 19, 20, 27, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46];
-  
     if (!((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122) || allowedKeys.includes(keyCode)))
       return false;
 
@@ -159,16 +271,10 @@ function onlyLettersAllowed(keyCode) {
 
 function handleOnChangeFunction(e, form, name, index) {
     const value = e.target.value;
-    if(name === "dob") {
-        if(!value) {
-            formMap[form][index-1] = false;
-            showError(form, name, index, "field cannot be empty..!");
-        }else {
-            removeError(form, name, index);
-            formMap[form][index-1] = true;
-        }
-    }else if(name === "maritalstatus") {
-        console.log(value);
+    let keyCode = e.keyCode || e.which;
+    console.log(keyCode);
+    
+    if(name === "maritalstatus") {
         if(!value) {
             formMap[form][index-1] = false;
             showError(form, name, index, "field cannot be empty..!");
@@ -194,124 +300,80 @@ function handleOnChangeFunction(e, form, name, index) {
         }
     }
 
-    let nextButton = true;
-    formMap[form].forEach((item, index) => {
-        console.log(item);
-        if(!item) nextButton = false;
-    });
+    // let nextButton = true;
+    // formMap[form].forEach((item, index) => {
+    //     console.log(item);
+    //     if(!item) nextButton = false;
+    // });
 
-    if(!nextButton) disableNextButton();
-    else enableNextButton();
+    // if(!nextButton) disableNextButton();
+    // else enableNextButton();
 
-    let changeButtonToSave = true;
-    const btn = document.querySelector(".buttonTwo");
+    // let changeButtonToSave = true;
+    // const btn = document.querySelector(".buttonTwo");
 
-    const formInputs = document.querySelector(`.${form}`).querySelectorAll(".inputbox");
-    formInputs.forEach((item, index) => {
-        console.log(item.value);
-        console.log(item);
-        if(!item.value) changeButtonToSave = false;
-    });
+    // const formInputs = document.querySelector(`.${form}`).querySelectorAll(".inputbox");
+    // formInputs.forEach((item, index) => {
+    //     if(!item.value) changeButtonToSave = false;
+    // });
     
-    if(form === "formThree" && nextButton && changeButtonToSave) {
-        btn.innerText = "Save";
-    }else {
-        btn.innerText = "Next";
-    }
+    // if(form === "formThree" && nextButton && changeButtonToSave) {
+    //     btn.innerText = "Save";
+    // } else {
+    //     btn.innerText = "Next";
+    // }
 }
 
-function getSpecialCharacters(inputValue) {
-    let specialChar = 0, lowerCase=0, numbers = 0, upperCase = 0;
-    for(let i=0; i<inputValue.length; i++) {
-        if(inputValue[i] >= 'a' && inputValue[i] <= 'z')
-            lowerCase++;
-        else if(inputValue[i] >= 'A' && inputValue[i] <= 'Z')
-            upperCase++;
-        else if(inputValue[i] >= '0' && inputValue[i] <= '9'){
-            numbers++;
-        }else {
-            specialChar++;
-        }
-    }
-    return specialChar;
-}
 
-function handleInputChange2(e, form, name, index) {
+function handleInputChange2(e, form, name, index) { // after key registration:
     const inputValue = e.target.value;
+    let keyCode = e.keyCode || e.which;
 
-    if(name === "firstname" || name === "lastname") {
-        if(!inputValue) {
-            formMap[form][index-1] = false;
-            showError(form, name, index, "field cannot be empty..!");
-        }else {
-            formMap[form][index-1] = true;
-            removeError(form, name, index);
-        }
-    }else if(name === "phonenumber") {
-        if(!allowOnlyNumbers(e)) {
-            formMap[form][index-1] = false;
-            e.preventDefault();
-        }else {
-            formMap[form][index-1] = true;
-        }
+    if(name === "phonenumber") {
+        removeError(form, name, index);
+        if(keyCode === 32) e.preventDefault();
+        if(!allowOnlyNumbers(e)) e.preventDefault();
     } else if(name === "work-x") {
-        if( !((Number(inputValue) >= 1) && (Number(inputValue) <= 50)) ) {
-            formMap[form][index-1] = false;
-            showError(form, name, index, "field cannot be empty, only numbers allowed, number less then 50");
-        } else {
-            formMap[form][index-1] = true;
-            removeError(form, name, index);
-        }
+        removeError(form, name, index);
     } else if(name === "companyname") {
-        if(!inputValue) {
-            formMap[form][index-1] = false;
-            showError(form, name, index, "field cannot be empty..!");
-        }else {
-            formMap[form][index-1] = true;
-            removeError(form, name, index);
-        }
+
     } else if(name === "yearsworked") {
-        if( !((Number(inputValue) >= 1) && (Number(inputValue) <= 50)) ) {
-            formMap[form][index-1] = false;
-            showError(form, name, index, "field cannot be empty, only numbers allowed, number less then 50");
-        } else {
-            formMap[form][index-1] = true;
-            removeError(form, name, index);
-        }
+        removeError(form, name, index);
     } else if(name === "thingsyouworked") {
-        console.log(form, name, index);
-        if(!inputValue) {
-            formMap[form][index-1] = false;
-            showError(form, name, index, "field cannot be empty");
-        } else {
-            formMap[form][index-1] = true;
-            removeError(form, name, index);
-        }
+
+    } else if(name === "password") {
+        removeError(form, name, index);
+        if(keyCode === 32) e.preventDefault();
+    } else if(name === "email") {
+        removeError(form, name, index);
+        if(keyCode === 32) e.preventDefault();
+    } else if(name === "firstname" || name === "lastname") {
+        if(!onlyLettersAllowed(keyCode)) e.preventDefault();
+    } else if(name === "address") {
+        removeError(form, name, index);
     }
 
-    let nextButton = true;
-    formMap[form].forEach((item, index) => {
-        if(!item) nextButton = false;
-    });
+    // let nextButton = true;
+    // formMap[form].forEach((item, index) => {
+    //     if(!item) nextButton = false;
+    // });
 
-    if(!nextButton) disableNextButton();
-    else enableNextButton();
+    // if(!nextButton) disableNextButton();
+    // else enableNextButton();
 
-    let changeButtonToSave = true;
-    const btn = document.querySelector(".buttonTwo");
+    // let changeButtonToSave = true;
+    // const btn = document.querySelector(".buttonTwo");
 
-    const formInputs = document.querySelector(`.${form}`).querySelectorAll(".inputbox");
-    formInputs.forEach((item, index) => {
-        console.log(item.value);
-        console.log(item);
-        if(!item.value) changeButtonToSave = false;
-    });
+    // const formInputs = document.querySelector(`.${form}`).querySelectorAll(".inputbox");
+    // formInputs.forEach((item, index) => {
+    //     if(!item.value) changeButtonToSave = false;
+    // });
     
-    if(form === "formThree" && nextButton && changeButtonToSave) {
-        btn.innerText = "Save";
-    }else {
-        btn.innerText = "Next";
-    }
+    // if(form === "formThree" && nextButton && changeButtonToSave) {
+    //     btn.innerText = "Save";
+    // }else {
+    //     btn.innerText = "Next";
+    // }
 }
 
 function handleInputChange(e, form, name, index) {
@@ -319,109 +381,79 @@ function handleInputChange(e, form, name, index) {
     let keyCode = e.keyCode || e.which;
 
     if(name === "firstname" || name === "lastname") {
-        if(!onlyLettersAllowed(keyCode)) {
-            showButton = false; formMap[form][index-1] = false;
-            e.preventDefault(); 
-        }else {
-            formMap[form][index-1] = true;
-        }
-    }else if(name === "email") {
-        if(!inputValue) {
-            showError(form, name, index, "field cannot be empty..!");
-            formMap[form][index-1] = false;
-        } else {
-            formMap[form][index-1] = true;
-            removeError(form, name, index); 
-        }
-
-        if(!checkEmail(inputValue)) {
-            formMap[form][index-1] = false;
-            showError(form, name, index, "not a valid email..!");
-        }else{
-            formMap[form][index-1] = true;
-            removeError(form, name, index);
-        }
-    }else if(name === "password") {
-        if(!inputValue) {
-            showError(form, name, index, "field cannot be empty..!");
-            formMap[form][index-1] = false;
-        }else {
-            formMap[form][index-1] = true;
-            removeError(form, name, index);
-        }
-        if(!customPasswordCheck(inputValue)) {
-            formMap[form][index-1] = false;
-            showError(form, name, index, "min 8, max 16, one upper case, one special character..!");
-        }else{ 
-            showButton = true; formMap[form][index-1] = true;
-            removeError(form, name, index);
-        }
-    }else if(name === "phonenumber"){
-        if(inputValue !== " " && inputValue.length !== 10) {
-            formMap[form][index-1] = false;
-            showError(form, name, index, "field cannot be empty, only numbers allowed..!");
-        }else {
-            showButton = true; formMap[form][index-1] = true;
-             removeError(form, name, index);
-        }
-    }else if(name === "address") {
-        if(!inputValue) {
-            showError(form, name, index, "field cannot be empty..!"); formMap[form][index-1] = false; 
-        }else {
-            removeError(form, name, index); formMap[form][index-1] = true;
-        }
-    }else if(name === "dob") {
-        if(!inputValue) {
-            showError(form, name, index, "field cannot be empty..!"); formMap[form][index-1] = false; 
-        }else {
-            removeError(form, name, index); formMap[form][index-1] = true;
-        }
-    }else if(name === "work-x") {
+        if(!onlyLettersAllowed(keyCode)) e.preventDefault();
+    } else if(name === "work-x") {
         if(!allowOnlyNumbers(e)) {
-            formMap[form][index-1] = false;
             e.preventDefault(); 
-        } else {
-            formMap[form][index-1] = true;
         }
     } else if(name === "companyname") {
         if(!onlyLettersAllowed(keyCode)) {
             e.preventDefault(); 
-        } else {
-            removeError(form, name, index);
         }
     } else if(name === "yearsworked") {
         if(!allowOnlyNumbers(e)) {
-            formMap[form][index-1] = false;
             e.preventDefault(); 
-        } else {
-            formMap[form][index-1] = true;
         }
     }
 
 
+    // let nextButton = true;
+    // formMap[form].forEach((item, index) => {
+    //     if(!item) nextButton = false;
+    // });
 
-    let nextButton = true;
-    formMap[form].forEach((item, index) => {
-        if(!item) nextButton = false;
-    });
+    // if(!nextButton) disableNextButton();
+    // else
+    //     enableNextButton();
 
-    if(!nextButton) disableNextButton();
-    else
-        enableNextButton();
+    // let changeButtonToSave = true;
+    // const btn = document.querySelector(".buttonTwo");
 
-    let changeButtonToSave = true;
-    const btn = document.querySelector(".buttonTwo");
-
-    const formInputs = document.querySelector(`.${form}`).querySelectorAll(".inputbox");
-    formInputs.forEach((item, index) => {
-        console.log(item.value);
-        console.log(item);
-        if(!item.value) changeButtonToSave = false;
-    });
+    // const formInputs = document.querySelector(`.${form}`).querySelectorAll(".inputbox");
+    // formInputs.forEach((item, index) => {
+    //     if(!item.value) changeButtonToSave = false;
+    // });
     
-    if(form === "formThree" && nextButton && changeButtonToSave) {
-        btn.innerText = "Save";
+    // if(form === "formThree" && nextButton && changeButtonToSave) {
+    //     btn.innerText = "Save";
+    // }else {
+    //     btn.innerText = "Next";
+    // }
+}
+
+
+function handleFormChange(e) {
+    let errorFound = false;
+
+    const btn = document.querySelector(".buttonTwo");
+    const inputs = e.srcElement.form.querySelectorAll(".inputbox");
+
+    inputs.forEach((value, index) => {
+        formMapToData[stepCount][value.name] = value.value;
+    });
+
+    Object.keys(formMapToData[stepCount]).forEach((value, index) => {
+        if(!formMapToData[stepCount][value])
+            errorFound = true;
+    });
+
+    if(errorFound) {
+        btn.disabled = true;
+        btn.style.backgroundColor = "grey";
+        btn.style.cursor = "not-allowed";
+        // btn.classList.remove("btnEnable");
+        // btn.classList.add("btnDisable");
     }else {
-        btn.innerText = "Next";
+        btn.disabled = false;
+        btn.style.backgroundColor = "blue";
+        btn.style.cursor = "pointer";
     }
+
+}
+
+function togglePassword() {
+    const passwordField = document.querySelector(".formOne").querySelector("#password");
+    const passowrdType = passwordField.type;
+    if(passowrdType === "password") passwordField.setAttribute("type", "text");
+    else passwordField.setAttribute("type", "password");
 }

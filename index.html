@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
     
@@ -14,118 +16,145 @@
                 <h2>Basic details</h2>
             </div>
             <div>
-                <div class="inputBlocks">
-                    <label for="firstname">First Name</label>
-                    <input class="inputbox" type="text" name="firstname" id="firstname" onkeyup="handleInputChange2(event,  'formOne', 'firstname', 1)" onkeydown="handleInputChange(event, 'formOne', 'firstname')">
-                    <p></p>
-                </div>
-                <div class="inputBlocks">
-                    <label for="lastname">Last Name</label>
-                    <input class="inputbox" type="text" name="lastname" id="lastname" onkeyup="handleInputChange2(event,  'formOne', 'lastname', 2)" onkeydown="handleInputChange(event, 'formOne', 'lastname')">
-                    <p></p>
-                </div>
-                <div class="inputBlocks">
-                    <label for="email">Email</label>
-                    <input class="inputbox" type="email" name="email" id="firstname" onkeyup="handleInputChange(event, 'formOne', 'email', 3)">
-                    <p></p>
-                </div>
-                <div class="inputBlocks">
-                    <label for="password">Password</label>
-                    <input class="inputbox" type="text" name="password" id="password" onkeyup="handleInputChange(event, 'formOne', 'password', 4)">
-                    <p></p>
-                </div>
-                <div class="inputBlocks">
-                    <label for="phonenumber">Phone Number</label>
-                    <input class="inputbox" maxlength="10" type="text" name="phonenumber" id="phonenumber" onkeyup="handleInputChange(event, 'formOne', 'phonenumber', 5)" onkeydown="handleInputChange2(event, 'formOne', 'phonenumber', 5)">
-                    <p></p>
-                </div>
+                <form id="formOne" action="" oninput="handleFormChange(event)">
+                    <div class="inputBlocks">
+                        <label for="firstname">First Name</label>
+                        <input class="inputbox" type="text" name="firstname" id="firstname" 
+                        onkeyup="handleInputChange2(event,  'formOne', 'firstname', 1)"
+                        onkeydown="handleInputChange(event, 'formOne', 'firstname', 1)" />
+                        <p></p>
+                    </div>
+                    <div class="inputBlocks">
+                        <label for="lastname">Last Name</label>
+                        <input class="inputbox" type="text" name="lastname" id="lastname" 
+                        onkeyup="handleInputChange2(event,  'formOne', 'lastname', 2)" 
+                        onkeydown="handleInputChange(event, 'formOne', 'lastname', 2)" />
+                        <p></p>
+                    </div>
+                    <div class="inputBlocks">
+                        <label for="email">Email</label>
+                        <input class="inputbox" type="email" name="email" id="email"
+                         onkeyup="handleInputChange(event, 'formOne', 'email', 3)" 
+                         onkeydown="handleInputChange2(event, 'formOne', 'email', 3)">
+                        <p></p>
+                    </div>
+                    <div class="inputBlocks">
+                        <label for="password">Password</label>
+                        <input class="inputbox" type="password" name="password" id="password" 
+                        onkeydown="handleInputChange2(event,  'formOne', 'password', 4)"
+                        onkeyup="handleInputChange(event, 'formOne', 'password', 4)">
+                        <i class="eyeButton fa fa-eye" onclick="togglePassword()"></i>
+                        </input>
+                        <p></p>
+                    </div>
+                    <div class="inputBlocks">
+                        <label for="phonenumber">Phone Number</label>
+                        <input class="inputbox" maxlength="10" type="text" name="phonenumber" id="phonenumber" 
+                        onkeyup="handleInputChange(event, 'formOne', 'phonenumber', 5)"
+                        onkeydown="handleInputChange2(event, 'formOne', 'phonenumber', 5)">
+                        <p></p>
+                    </div>
+                </form>                
             </div>
         </div>
+        
         <div class="formTwo hideElement">
             <div>
                 <h2 class="formTwoHeading">Personal details</h2>
             </div>
             <div>
-                <div class="inputBlocks">
-                    <label for="address">Address</label>
-                    <textarea class="inputbox" type="text" name="address" id="address" onkeyup="handleInputChange(event,  'formTwo', 'address', 1)"></textarea>
-                    <p></p>
-                </div>
-                <div class="inputBlocks">
-                    <label for="dateofbirth">DOB</label>
-                    <input class="inputbox" type="date" name="dateofbirth" id="" onchange="handleOnChangeFunction(event,  'formTwo', 'dob', 2)">
-                    <p></p>
-                </div>
-                <div class="inputBlocks">
-                    <label for="">Marital Status</label>
-                    <select class="inputbox" name="maritalstatus" onchange="handleOnChangeFunction(event,  'formTwo', 'maritalstatus', 3)">
-                        <option value="" selected disabled></option>
-                        <option value="Married">Married</option>
-                        <option value="Single">Single</option>
-                        <option value="Un-Married">Un-Married</option>
-                        <option value="Divoced">Divoced</option>
-                    </select>
-                    <p></p>
-                </div>
-                <div class="inputBlocks">
-                    <label for="">Gender</label>
-                    <select name="gender" id="" class="inputbox" onchange="handleOnChangeFunction(event, 'formTwo', 'gender', 4)">
-                        <option value="" selected disabled></option>
-                        <option value="Male" >Male</option>
-                        <option value="Female" >Female</option>
-                        <option value="Other" >Other</option>
-                    </select>
-                    <p></p>
-                </div>
-                <div class="inputBlocks">
-                    <label for="">Work Experience in Years</label>
-                    <input class="inputbox" type="text" name="workexperience" id="" onkeyup="handleInputChange2(event, 'formTwo', 'work-x', 5)"  onkeydown="handleInputChange(event, 'formTwo', 'work-x', 5)">
-                    <p></p>
-                </div>
+                <form id="formTwo" action="" oninput="handleFormChange(event)">
+                    <div class="inputBlocks">
+                        <label for="address">Address</label>
+                        <textarea class="inputbox" value="" type="text" name="address" id="address"
+                        onkeyup="handleInputChange(event,  'formTwo', 'address', 1)"
+                        onchange="handleOnChangeFunction(event, 'formTwo', 'address', 1)"
+                        ></textarea>
+                        <p></p>
+                    </div>
+                    <div class="inputBlocks">
+                        <label for="dateofbirth">DOB</label>
+                        <input value="" class="inputbox" type="date" name="dateofbirth" id=""
+                        onchange="handleOnChangeFunction(event, 'formTwo', 'dob', 2)">
+                        <p></p>
+                    </div>
+                    <div class="inputBlocks">
+                        <label for="">Marital Status</label>
+                        <select value="" class="inputbox" name="maritalstatus" onchange="handleOnChangeFunction(event,  'formTwo', 'maritalstatus', 3)">
+                            <option value="" selected disabled></option>
+                            <option value="Married">Married</option>
+                            <option value="Single">Single</option>
+                            <option value="Un-Married">Un-Married</option>
+                            <option value="Divoced">Divoced</option>
+                        </select>
+                        <p></p>
+                    </div>
+                    <div class="inputBlocks">
+                        <label for="">Gender</label>
+                        <select value="" name="gender" id="" class="inputbox" onchange="handleOnChangeFunction(event, 'formTwo', 'gender', 4)">
+                            <option value="" selected disabled></option>
+                            <option value="Male" >Male</option>
+                            <option value="Female" >Female</option>
+                            <option value="Other" >Other</option>
+                        </select>
+                        <p></p>
+                    </div>
+                    <div class="inputBlocks">
+                        <label for="">Work Experience in Years</label>
+                        <input value="" class="inputbox" type="text" name="workexperience" id="workexperience" onkeyup="handleInputChange2(event, 'formTwo', 'work-x', 5)"  onkeydown="handleInputChange(event, 'formTwo', 'work-x', 5)">
+                        <p></p>
+                    </div>
+                </form>
             </div>
         </div>
+
         <div class="formThree hideElement">
             <h2 class="formThreeHeading">Your Organization</h2>
             <div>
-                <div class="inputBlocks">
-                    <label for="companyname">Company Name</label>
-                    <input class="inputbox" type="text" name="companyname" id="companyname"
-                    onkeyup="handleInputChange2(event, 'formThree', 'companyname', 1)"
-                    onkeydown="handleInputChange(event, 'formThree', 'companyname', 1)">
-                    <p></p>
-                </div>
-                <div class="inputBlocks">
-                    <label for="yearsworked">Years worked</label>
-                    <input class="inputbox" type="text" name="yearsworked" id="yearsworked"
-                    onkeydown="handleInputChange(event, 'formThree', 'yearsworked', 2)"
-                    onkeyup="handleInputChange2(event, 'formThree', 'yearsworked', 2)">
-                    <p></p>
-                </div>
-                <div class="inputBlocks">
-                    <label for="">Domain</label>
-                    <select name="domain" id="" class="inputbox" 
-                    onchange="handleOnChangeFunction(event,  'formThree', 'domain', 3)">
-                        <option value="" selected disabled></option>
-                        <option value="Frontend">Frontend</option>
-                        <option value="Backend">Backend</option>
-                        <option value="Fullstack">Fullstack</option>
-                        <option value="DevOps">DevOps</option>
-                    </select>
-                    <p></p>
-                </div>
+                <form id="formThree" action="" oninput="handleFormChange(event)">
+                    <div class="inputBlocks">
+                        <label for="companyname">Company Name</label>
+                        <input class="inputbox" type="text" name="companyname" id="companyname"
+                        onkeyup="handleInputChange2(event, 'formThree', 'companyname', 1)"
+                        onkeydown="handleInputChange(event, 'formThree', 'companyname', 1)"
+                        onchange="handleOnChangeFunction(event, 'formThree', 'companyname', 1)" />
+                        <p></p>
+                    </div>
+                    <div class="inputBlocks">
+                        <label for="yearsworked">Years worked</label>
+                        <input class="inputbox" type="text" name="yearsworked" id="yearsworked"
+                        onkeydown="handleInputChange(event, 'formThree', 'yearsworked', 2)"
+                        onkeyup="handleInputChange2(event, 'formThree', 'yearsworked', 2)"
+                        onchange="handleOnChangeFunction(event, 'formThree', 'yearsworked', 2)" />
+                        <p></p>
+                    </div>
+                    <div class="inputBlocks">
+                        <label for="">Domain</label>
+                        <select name="domain" id="" class="inputbox"
+                        onchange="handleOnChangeFunction(event,  'formThree', 'domain', 3)">
+                            <option value="" selected disabled></option>
+                            <option value="Frontend">Frontend</option>
+                            <option value="Backend">Backend</option>
+                            <option value="Fullstack">Fullstack</option>
+                            <option value="DevOps">DevOps</option>
+                        </select>
+                        <p></p>
+                    </div>
 
-                <div class="inputBlocks">
-                    <label for="">Things you have worked on</label>
-                    <textarea onkeyup="handleInputChange2(event, 'formThree', 'thingsyouworked', 4)" class="inputbox" name="thingsyouworked" id="" cols="30" rows="9"></textarea>
-                    <p></p>
-                </div>
-
+                    <div class="inputBlocks">
+                        <label for="">Things you have worked on</label>
+                        <textarea onkeyup="handleInputChange2(event, 'formThree', 'thingsyouworked', 4)" 
+                        onchange="handleOnChangeFunction(event,  'formThree', 'thingsyouworked', 4)"
+                        class="inputbox" name="thingsyouworked" id="" cols="30" rows="9"></textarea>
+                        <p></p>
+                    </div>
+                </form>
             </div>
         </div>
 
         <div class="controlers">
             <button class="buttonOne" onclick="changeStep('prev')">Prev</button>
-            <button class="buttonTwo" onclick="changeStep('next')">Next</button>
+            <button class="buttonTwo" disabled onclick="changeStep('next')">Next</button>
         </div>
     </div>
 
