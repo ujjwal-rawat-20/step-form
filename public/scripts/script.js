@@ -88,7 +88,8 @@ function checkAllInputFields(formData, form) {
             }
         } else if(key === "password") {
             const inputBlock = document.querySelector(`.${form}`).querySelector(`#${key}`);
-            const errorElement = inputBlock.nextSibling.nextSibling;
+            const errorElement = inputBlock.nextSibling.nextSibling.nextSibling.nextSibling;
+            console.log(errorElement);
             const inputPassword = formData[key];
             if(!customPasswordCheck(inputPassword)) {
                 foundError = true;
