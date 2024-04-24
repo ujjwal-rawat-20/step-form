@@ -15,6 +15,10 @@ body {
     background-image: linear-gradient(to top, #cc208e 0%, #6713d2 100%);
 }
 
+input {
+    margin: 5px 10px;
+}
+
 .container {
     width: 65%;
 }

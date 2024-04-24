@@ -2,6 +2,18 @@ let stepCount = 0;
 const formOneDataObj = {};
 const formTwoDataObj = {};
 const formThreeDataObj = {};
+const prevBtn = document.querySelector(".buttonOne");
+const dateInput = document.getElementById("dateofbirth");
+
+window.onload = function() {
+    prevBtn.style.display = "none";
+    
+    // let minDate = new Date();
+    // minDate.setFullYear(minDate.getFullYear() - 2);
+    // let minDateStr = minDate.toISOString().split('T')[0];
+    // console.log(dateInput.min);
+    // dateInput.min = minDateStr;
+}
 
 const formMapToSteps = {  // to identify we are on which form based on the steps:
     0: "formOne",
@@ -156,6 +168,7 @@ function checkAllInputFields(formData, form) {
 }
 
 function saveData() {
+    console.log("saving data...");
     let dataObject = {};
 
     const formInputsData = document.querySelectorAll(".inputbox");
@@ -179,8 +192,9 @@ function saveData() {
 }
 
 function changeStep(buttonClicked) {
+    console.log(stepCount);
     const btn = document.querySelector(".buttonTwo");
-    if(btn.innerText === "Save")
+    if(buttonClicked !== "prev" && btn.innerText === "Save" && stepCount === 2)
         return saveData();
 
     if(stepCount === 0 && buttonClicked === "prev") {
@@ -211,6 +225,11 @@ function changeStep(buttonClicked) {
     formToRemoveElement.classList.add("hideElement");
     selectedFormElement.classList.remove("hideElement");
 
+    if(stepCount === 0) {
+        prevBtn.style.display = "none";
+    }else {
+        prevBtn.style.display = "block";
+    }
 
     // to disable the next button if all the values of the current form are empty:
     const currentForm = formMapToSteps[stepCount];
